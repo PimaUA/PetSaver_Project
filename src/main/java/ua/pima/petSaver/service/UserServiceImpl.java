@@ -4,9 +4,12 @@ import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import ua.pima.petSaver.dto.SignUpUserDto;
-import ua.pima.petSaver.entity.UserSecurityInfo;
+import ua.pima.petSaver.entity.user.UserSecurityInfo;
 import ua.pima.petSaver.repository.UserSecurityInfoRepository;
+
+import java.util.Optional;
 
 @Service
 public class UserServiceImpl implements UserService {
@@ -18,18 +21,27 @@ public class UserServiceImpl implements UserService {
     BCryptPasswordEncoder bCryptPasswordEncoder;
 
     @Override
-    public UserSecurityInfo findByUsername(String username) {
+    public Optional<UserSecurityInfo> findByUsername(String username) {
         return userSecurityInfoRepository.findByUsername(username);
     }
 
+    /*private boolean emailExists(String email) {
+        return userRepository.findByEmail(email) != null;
+    }*/
+
     @Override
-    public void saveUserSecurityInfo(SignUpUserDto signUpUserDto) {
-        signUpUserDto.setPassword(bCryptPasswordEncoder.encode(signUpUserDto.getPassword()));
-        UserSecurityInfo userSecurityInfo = convertToUserSecurityInfo(signUpUserDto);
+    public void save(SignUpUserDto signUpUserDto) {
+        UserSecurityInfo userSecurityInfo = new UserSecurityInfo(signUpUserDto.getUsername()
+                , bCryptPasswordEncoder.encode(signUpUserDto.getPassword()), true, "ROLE_USER");
+
         userSecurityInfoRepository.save(userSecurityInfo);
+
+        /*signUpUserDto.setPassword(bCryptPasswordEncoder.encode(signUpUserDto.getPassword()));
+        UserSecurityInfo userSecurityInfo = convertToUserSecurityInfo(signUpUserDto);
+        userSecurityInfoRepository.save(userSecurityInfo);*/
     }
 
-    private UserSecurityInfo convertToUserSecurityInfo(SignUpUserDto signUpUserDto) {
+    /*private UserSecurityInfo convertToUserSecurityInfo(SignUpUserDto signUpUserDto) {
         return modelMapper.map(signUpUserDto, UserSecurityInfo.class);
-    }
+    }*/
 }

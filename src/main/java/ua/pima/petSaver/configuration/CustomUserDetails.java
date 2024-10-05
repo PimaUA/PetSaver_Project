@@ -1,19 +1,24 @@
 package ua.pima.petSaver.configuration;
 
 import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
+import ua.pima.petSaver.entity.user.UserSecurityInfo;
 
 import java.util.Collection;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 public class CustomUserDetails implements UserDetails {
     private String username;
     private String password;
     private Collection<? extends GrantedAuthority> authorities;
 
-    public CustomUserDetails(String username, String password, Collection<? extends GrantedAuthority> authorities) {
-        this.username = username;
-        this.password = password;
-        this.authorities = authorities;
+    public CustomUserDetails(UserSecurityInfo userSecurityInfo) {
+        this.username = userSecurityInfo.getUsername();
+        this.password = userSecurityInfo.getPassword();
+        this.authorities = Stream.of(userSecurityInfo.getRoles().split(","))
+                .map(SimpleGrantedAuthority::new).collect(Collectors.toList());
     }
 
     @Override

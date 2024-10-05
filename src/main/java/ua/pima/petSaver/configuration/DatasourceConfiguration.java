@@ -11,16 +11,16 @@ import javax.sql.DataSource;
 @Configuration
 public class DatasourceConfiguration {
 
-    @Bean(name = "dataSource")
+   /* @Bean(name = "dataSource")
     @Primary
     @ConfigurationProperties(prefix = "spring.datasource")
-    public DataSource getDataSource() {
+    public DataSource dataSource() {
        return DataSourceBuilder.create().build();
-    }
+    }*/
 
-    @Bean(name = "securityDataSource")
+    @Bean(name = "securityDatasource")
     @ConfigurationProperties(prefix = "spring.datasource.security")
-    public DataSource getSecurityDataSource() {
+    public DataSource securityDataSource() {
         return DataSourceBuilder.create().build();
     }
 

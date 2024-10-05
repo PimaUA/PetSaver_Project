@@ -1,6 +1,6 @@
 <!DOCTYPE html>
-<html xmlns="http://www.w3.org/1999/xhtml"
-      xmlns:th="http://www.thymeleaf.org">
+<html xmlns="http://www.w3.org/1999/xhtml" 
+      xmlns:th="http://www.thymeleaf.org" lang="en">
 
 <head>
     <meta charset="UTF-8">
@@ -84,7 +84,7 @@
 
         <div th:if="${param.error}">
             <div class="error-message">
-                <p>Invalid Username or Password</p>
+                <p>Invalid Username or password</p>
             </div>
         </div>
 
@@ -95,19 +95,17 @@
         </div>
 
         <h2>Login</h2>
-        <form th:action="@{/login}" th:object="${signUpUser}" method="POST">
+        <form th:action="@{/login}" th:object="${loginUser}" method="POST">
 
             <label for="username">Username:</label>
-            <input type="text" th:field="*{username}"
-                   id="username" placeholder="Enter your Username"/>
+            <input type="text" th:field="*{username}" id="username" placeholder="Enter your Username" required>
 
             <label for="password">Password:</label>
-            <input type="password" th:field="*{password}"
-                   id="password" placeholder="Enter your Password"/>
+            <input type="password" th:field="*{password}" id="password" placeholder="Enter your Password" required>
 
             <button type="submit">Login</button>
         </form>
-        <p class="form-footer">Don't have an account? <a th:href="@{/register}">Register</a>here.</p>
+        <p class="form-footer">Don't have an account? <a th:href="@{/register}">Register</a> here.</p>
     </div>
 </div>
 </body>

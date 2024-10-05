@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml"
-      xmlns:th="http://www.thymeleaf.org">
+      xmlns:th="http://www.thymeleaf.org" lang="en">
 
 <head>
     <meta charset="UTF-8">
@@ -86,27 +86,55 @@
         </div>
     </div>
 
-    <h2 th:text="#{label.form.title}">Registration</h2>
-    <form th:action="@{/register}" th:object="${signUpUser}" method="POST" enctype="utf8">
+    <h2 th:text="#{form.title}">Registration</h2>
+    <form th:action="@{/register}" th:object="${signupUser}" method="POST">
 
         <div>
             <label for="username">Username:</label>
-            <input type="text" th:field="*{username}"
-                   id="username" placeholder="Enter your Username"/>
+            <input type="text" th:field="*{username}" id="username" placeholder="Enter username" required/>
             <p th:if="${#fields.hasErrors('username')}"
-               th:errors = "*{username}"> Incorrect username
+               th:errors="*{username}">
             </p>
         </div>
 
-        <button type="submit">Register</button>
+        <div>
+            <label for="email">Email:</label>
+            <input type="text" th:field="*{email}"
+                   id="email" placeholder="Enter your email"
+                    required />
+            <p th:if="${#fields.hasErrors('email')}"
+               th:errors="*{email}" >
+            </p>
+        </div>
+
+        <div>
+            <label for="password">password</label>
+            <input type="password" th:field="*{password}"
+                   id="password" placeholder="Enter your password" required/>
+            <p th:if="${#fields.hasErrors('password')}"
+               th:errors="*{password}">
+            </p>
+        </div>
+
+        <div>
+            <label for="matchingPassword">password confirm</label>
+            <input type="password" th:field="*{matchingPassword}"
+                   id="matchingPassword" placeholder="Confirm your password" required/>
+            <p th:if="${#fields.hasErrors('global')}"
+               th:errors="*{global}">
+            </p>
+        </div>
+
+        <button type="submit" th:text="#{form.submit}">submit</button>
     </form>
 
     <div>
-        <span th:if="${Userexist}" style="color: red;">Username is Taken</span>
+        <span th:if="${userExists}" style="color: red;">Username is Taken </span>
     </div>
+    <br>
     <div>
         <span class="form-footer">Already have an account?
-            <a th:href="@{/login}">Login</a>here.</span>
+            <a th:href="@{/login}">Login</a> here.</span>
     </div>
 
 </div>

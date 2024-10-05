@@ -11,10 +11,11 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import ua.pima.petSaver.configuration.CustomUserDetailsService;
 import ua.pima.petSaver.dto.SignUpUserDto;
-import ua.pima.petSaver.entity.UserSecurityInfo;
+import ua.pima.petSaver.entity.user.UserSecurityInfo;
 import ua.pima.petSaver.service.UserService;
 
 import java.security.Principal;
+import java.util.Optional;
 
 @Controller
 public class UserController {
@@ -27,35 +28,35 @@ public class UserController {
     public String showHomePage(Model model, Principal principal) {
         UserDetails userDetails = customUserDetailsService.loadUserByUsername(principal.getName());
         model.addAttribute("userDetails", userDetails);
-        return "home";
+        return "homeView";
     }
 
     @GetMapping("/login")
     public String showLoginPage(Model model, SignUpUserDto signUpUserDto) {
-        model.addAttribute("signUpUser", signUpUserDto);
-        return "login";
+        model.addAttribute("loginUser", signUpUserDto);
+        return "loginView";
     }
 
     @GetMapping("/register")
-    public String showRegistrationForm(Model model, SignUpUserDto signUpUserDto) {
+    public String showRegistrationForm(Model model) { //,SignUpUserDto signUpUserDto
         //SignUpUserDto signUpUserDto = new SignUpUserDto();
-        model.addAttribute("signUpUser", signUpUserDto);
-        return "registration";
+        model.addAttribute("signupUser", new SignUpUserDto());
+        return "registrationView";
     }
 
     @PostMapping("/register")
-    public String registerUserAccount(@ModelAttribute("signUpUser") @Valid SignUpUserDto signUpUserDto
-            , Model model, BindingResult bindingResult) {
-        UserSecurityInfo userSecurityInfo = userService.findByUsername(signUpUserDto.getUsername());
-        if(userSecurityInfo != null){
-            model.addAttribute("userExits", userSecurityInfo);
-            bindingResult.rejectValue("username",
-                    "There is already an account registered with the same name");
+    public String registerUserAccount(@Valid @ModelAttribute("signupUser") SignUpUserDto signUpUserDto
+            , BindingResult bindingResult, Model model) {
+        Optional<UserSecurityInfo> optionalUserSecurityInfo = userService.findByUsername(signUpUserDto.getUsername());
+        if (optionalUserSecurityInfo.isPresent() ) { //||
+            model.addAttribute("userExists", optionalUserSecurityInfo);
+            return "registrationView";
         }
         if (bindingResult.hasErrors()) {
-            return "registration";
+            //model.addAttribute("signupUser", signUpUserDto);
+            return "registrationView";
         }
-        userService.saveUserSecurityInfo(signUpUserDto);
+        userService.save(signUpUserDto);
         return "redirect:/register?success";
     }
 }

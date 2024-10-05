@@ -1,11 +1,15 @@
 package ua.pima.petSaver.service;
 
 import ua.pima.petSaver.dto.SignUpUserDto;
-import ua.pima.petSaver.entity.UserSecurityInfo;
+import ua.pima.petSaver.entity.user.UserSecurityInfo;
+
+import java.util.Optional;
 
 public interface UserService {
 
-    UserSecurityInfo findByUsername(String username);
+    Optional<UserSecurityInfo> findByUsername(String username);
 
-    void saveUserSecurityInfo(SignUpUserDto signUpUserDto);
+    void save(SignUpUserDto signUpUserDto);
+
+    //void saveUserSecurityInfo(SignUpUserDto signUpUserDto);
 }
