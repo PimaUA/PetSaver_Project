@@ -48,7 +48,7 @@ public class UserController {
     public String registerUserAccount(@Valid @ModelAttribute("signupUser") SignUpUserDto signUpUserDto
             , BindingResult bindingResult, Model model) {
         Optional<UserSecurityInfo> optionalUserSecurityInfo = userService.findByUsername(signUpUserDto.getUsername());
-        if (optionalUserSecurityInfo.isPresent() ) { //||
+        if (optionalUserSecurityInfo.isPresent()) { //||
             model.addAttribute("userExists", optionalUserSecurityInfo);
             return "registrationView";
         }
@@ -59,4 +59,12 @@ public class UserController {
         userService.save(signUpUserDto);
         return "redirect:/register?success";
     }
+
+    @GetMapping("/allUsers")
+    public String showUserList(Model model) {
+        model.addAttribute("users", userService.getAllUsers());
+        return "allUsersView";
+    }
+
+
 }

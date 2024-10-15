@@ -97,6 +97,16 @@
             </p>
         </div>
 
+          <div>
+              <label for="country">Country:
+              <select id="country" name="country">
+                  <!--<option value="0">Select Country</option>-->
+                  <option th:each="countryOption : ${T(ua.pima.petSaver.entity.user.Country).values()}"
+                          th:value="${countryOption}" th:text="${countryOption}"></option>
+              </select>
+              </label>
+          </div>
+<br>
         <div>
             <label for="email">Email:</label>
             <input type="text" th:field="*{email}"
@@ -108,7 +118,7 @@
         </div>
 
         <div>
-            <label for="password">password</label>
+            <label for="password">Password</label>
             <input type="password" th:field="*{password}"
                    id="password" placeholder="Enter your password" required/>
             <p th:if="${#fields.hasErrors('password')}"
@@ -117,13 +127,15 @@
         </div>
 
         <div>
-            <label for="matchingPassword">password confirm</label>
+            <label for="matchingPassword">Password confirmation</label>
             <input type="password" th:field="*{matchingPassword}"
                    id="matchingPassword" placeholder="Confirm your password" required/>
             <p th:if="${#fields.hasErrors('global')}"
                th:errors="*{global}">
             </p>
         </div>
+
+        <!--<input type="hidden" th:field="*{dateTimeOfRegistry}" id="dateTimeOfRegistry">-->
 
         <button type="submit" th:text="#{form.submit}">submit</button>
     </form>

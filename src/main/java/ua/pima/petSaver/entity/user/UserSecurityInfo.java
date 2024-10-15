@@ -6,23 +6,42 @@ import lombok.Setter;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
 
+import java.sql.Timestamp;
+
 @Setter
 @Getter
 @Entity
 @Table(name = "users")
-@SecondaryTable(name = "authorities", pkJoinColumns = @PrimaryKeyJoinColumn(name = "username"))
+//@SecondaryTable(name = "authorities", pkJoinColumns = @PrimaryKeyJoinColumn(name = "username"))
+
+@SecondaryTables({
+        @SecondaryTable(
+                name = "authorities",
+                pkJoinColumns = @PrimaryKeyJoinColumn(name = "username")
+        ),
+        @SecondaryTable(
+                name = "users_info",
+                pkJoinColumns = @PrimaryKeyJoinColumn(name = "username")
+        )
+})
+
 public class UserSecurityInfo {
     @Id
     @Column(name = "username")
     //??
-    @OnDelete(action = OnDeleteAction.CASCADE)
+    //@OnDelete(action = OnDeleteAction.CASCADE)
     private String username;
     @Column(name = "password")
     private String password;
     @Column(name = "enabled")
-    boolean enabled;
+    private boolean enabled;
     @Column(name = "authority", table = "authorities")
     private String roles;
+
+    @Column(name = "country_code",table = "users_info")
+    private Country country;
+    /*@Column(name = "registered_at",table = "users_info")
+    private Timestamp dateTimeOfRegistry;*/
 
     public UserSecurityInfo() {
     }
@@ -32,5 +51,13 @@ public class UserSecurityInfo {
         this.password = password;
         this.enabled = enabled;
         this.roles = roles;
+    }
+
+    public UserSecurityInfo(String username, String password, boolean enabled, String roles, Country country) {
+        this.username = username;
+        this.password = password;
+        this.enabled = enabled;
+        this.roles = roles;
+        this.country = country;
     }
 }

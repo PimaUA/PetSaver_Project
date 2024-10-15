@@ -9,6 +9,7 @@ import ua.pima.petSaver.dto.SignUpUserDto;
 import ua.pima.petSaver.entity.user.UserSecurityInfo;
 import ua.pima.petSaver.repository.UserSecurityInfoRepository;
 
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -32,7 +33,8 @@ public class UserServiceImpl implements UserService {
     @Override
     public void save(SignUpUserDto signUpUserDto) {
         UserSecurityInfo userSecurityInfo = new UserSecurityInfo(signUpUserDto.getUsername()
-                , bCryptPasswordEncoder.encode(signUpUserDto.getPassword()), true, "ROLE_USER");
+                , bCryptPasswordEncoder.encode(signUpUserDto.getPassword()), true, "ROLE_USER",
+        signUpUserDto.getCountry());
 
         userSecurityInfoRepository.save(userSecurityInfo);
 
@@ -41,7 +43,14 @@ public class UserServiceImpl implements UserService {
         userSecurityInfoRepository.save(userSecurityInfo);*/
     }
 
+    @Override
+    public List<UserSecurityInfo> getAllUsers() {
+        return userSecurityInfoRepository.findAll();
+    }
+
     /*private UserSecurityInfo convertToUserSecurityInfo(SignUpUserDto signUpUserDto) {
         return modelMapper.map(signUpUserDto, UserSecurityInfo.class);
     }*/
+
+
 }

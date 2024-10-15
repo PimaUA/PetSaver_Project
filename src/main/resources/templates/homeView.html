@@ -43,14 +43,27 @@
 </head>
 
 <body>
-
 <div class="dashboard">
     <h1 class="dashboard_title">Welcome to the Dashboard </h1>
     <div class="dashboard_user">
         <h2 th:text="${userDetails.username}" class="dashboard_user_name"></h2>
-        <span sec:authorize="hasRole('OWNER')" style="color: blue;">You have owner rights</span>
     </div>
 
+    <div>
+        <span sec:authorize="hasRole('OWNER')" style="color: blue;">You have owner rights</span>
+        <br><br>
+
+        <button sec:authorize="hasAnyRole('OWNER','ADMIN')" type="button"
+                th:onclick="|window.location.href='/allUsers'|">Show All</button>
+
+        <button sec:authorize="hasAnyRole('OWNER','ADMIN')" type="button"
+                th:onclick="|window.location.href='/allUsers'|">Find</button>
+
+        <button sec:authorize="hasRole('OWNER')" type="button"
+                th:onclick="|window.location.href='/allUsers'|">Show banned</button>
+    </div>
+
+    <br><br>
     <div class="span-text">
         <span sec:authorize="isAuthenticated" style="color: red;"><a th:href="@{/login?logout}">Logout</a></span>
     </div>
