@@ -48,7 +48,7 @@ public class UserController {
     public String registerUserAccount(@Valid @ModelAttribute("signupUser") SignUpUserDto signUpUserDto
             , BindingResult bindingResult, Model model) {
         Optional<UserSecurityInfo> optionalUserSecurityInfo = userService.findByUsername(signUpUserDto.getUsername());
-        if (optionalUserSecurityInfo.isPresent()) { //||
+        if (optionalUserSecurityInfo.isPresent() || emailExists(signUpUserDto.getEmail())) {
             model.addAttribute("userExists", optionalUserSecurityInfo);
             return "registrationView";
         }
@@ -66,5 +66,7 @@ public class UserController {
         return "allUsersView";
     }
 
-
+    private boolean emailExists(String email) {
+        return userService.findByEmail(email).isPresent();
+    }
 }

@@ -10,6 +10,8 @@ public interface UserService {
 
     Optional<UserSecurityInfo> findByUsername(String username);
 
+    Optional<UserSecurityInfo> findByEmail(String email);
+
     void save(SignUpUserDto signUpUserDto);
 
     List<UserSecurityInfo> getAllUsers();

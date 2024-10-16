@@ -40,6 +40,8 @@ public class UserSecurityInfo {
 
     @Column(name = "country_code",table = "users_info")
     private Country country;
+    @Column(name="email",table = "users_info",unique = true)
+    private String email;
     /*@Column(name = "registered_at",table = "users_info")
     private Timestamp dateTimeOfRegistry;*/
 
@@ -53,11 +55,12 @@ public class UserSecurityInfo {
         this.roles = roles;
     }
 
-    public UserSecurityInfo(String username, String password, boolean enabled, String roles, Country country) {
+    public UserSecurityInfo(String username, String password, boolean enabled, String roles, Country country, String email) {
         this.username = username;
         this.password = password;
         this.enabled = enabled;
         this.roles = roles;
         this.country = country;
+        this.email = email;
     }
 }

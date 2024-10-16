@@ -26,15 +26,16 @@ public class UserServiceImpl implements UserService {
         return userSecurityInfoRepository.findByUsername(username);
     }
 
-    /*private boolean emailExists(String email) {
-        return userRepository.findByEmail(email) != null;
-    }*/
+    @Override
+    public Optional<UserSecurityInfo> findByEmail(String email) {
+        return userSecurityInfoRepository.findByEmail(email);
+    }
 
     @Override
     public void save(SignUpUserDto signUpUserDto) {
         UserSecurityInfo userSecurityInfo = new UserSecurityInfo(signUpUserDto.getUsername()
                 , bCryptPasswordEncoder.encode(signUpUserDto.getPassword()), true, "ROLE_USER",
-        signUpUserDto.getCountry());
+        signUpUserDto.getCountry(),signUpUserDto.getEmail());
 
         userSecurityInfoRepository.save(userSecurityInfo);
 
@@ -51,6 +52,5 @@ public class UserServiceImpl implements UserService {
     /*private UserSecurityInfo convertToUserSecurityInfo(SignUpUserDto signUpUserDto) {
         return modelMapper.map(signUpUserDto, UserSecurityInfo.class);
     }*/
-
 
 }

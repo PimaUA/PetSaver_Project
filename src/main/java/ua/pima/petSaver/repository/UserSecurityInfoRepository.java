@@ -12,6 +12,8 @@ public interface UserSecurityInfoRepository  extends JpaRepository<UserSecurityI
     //?? can be replaced by findByID??
     Optional<UserSecurityInfo> findByUsername(String username);
 
+    Optional<UserSecurityInfo> findByEmail(String email);
+
     //UserSecurityInfo save(SignUpUserDto signUpUserDto);
 
     //UserSecurityInfo saveDto(SignUpUserDto signUpUserDto);
