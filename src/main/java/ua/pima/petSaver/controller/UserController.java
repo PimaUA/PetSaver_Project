@@ -6,15 +6,15 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.*;
 import ua.pima.petSaver.configuration.CustomUserDetailsService;
 import ua.pima.petSaver.dto.SignUpUserDto;
-import ua.pima.petSaver.entity.user.UserSecurityInfo;
+import ua.pima.petSaver.dto.UserSearch;
+import ua.pima.petSaver.entity.user.UserInfo;
 import ua.pima.petSaver.service.UserService;
 
 import java.security.Principal;
+import java.util.List;
 import java.util.Optional;
 
 @Controller
@@ -47,9 +47,9 @@ public class UserController {
     @PostMapping("/register")
     public String registerUserAccount(@Valid @ModelAttribute("signupUser") SignUpUserDto signUpUserDto
             , BindingResult bindingResult, Model model) {
-        Optional<UserSecurityInfo> optionalUserSecurityInfo = userService.findByUsername(signUpUserDto.getUsername());
-        if (optionalUserSecurityInfo.isPresent() || emailExists(signUpUserDto.getEmail())) {
-            model.addAttribute("userExists", optionalUserSecurityInfo);
+        Optional<UserInfo> optionalUserInfo = userService.findByUsername(signUpUserDto.getUsername());
+        if (optionalUserInfo.isPresent() || emailExists(signUpUserDto.getEmail())) {
+            model.addAttribute("userExists", optionalUserInfo);
             return "registrationView";
         }
         if (bindingResult.hasErrors()) {
@@ -64,6 +64,21 @@ public class UserController {
     public String showUserList(Model model) {
         model.addAttribute("users", userService.getAllUsers());
         return "allUsersView";
+    }
+
+   /* @GetMapping("/searchUser")
+    public String searchUser(Model model,String value) {
+        model.addAttribute("userSearch", new UserSearch(value));
+
+        return "homeView";
+    }*/
+
+    @PostMapping("/searchUser")
+    public String searchUser(@ModelAttribute UserSearch userSearch, Model model) {
+        List<UserInfo> searchResults =
+                userService.search(userSearch);
+        model.addAttribute("searchResults", searchResults);
+        return "homeView";
     }
 
     private boolean emailExists(String email) {

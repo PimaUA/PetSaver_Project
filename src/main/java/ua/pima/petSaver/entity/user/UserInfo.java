@@ -6,8 +6,6 @@ import lombok.Setter;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
 
-import java.sql.Timestamp;
-
 @Setter
 @Getter
 @Entity
@@ -24,12 +22,11 @@ import java.sql.Timestamp;
                 pkJoinColumns = @PrimaryKeyJoinColumn(name = "username")
         )
 })
-
-public class UserSecurityInfo {
+public class UserInfo {
     @Id
     @Column(name = "username")
     //??
-    //@OnDelete(action = OnDeleteAction.CASCADE)
+    @OnDelete(action = OnDeleteAction.CASCADE)
     private String username;
     @Column(name = "password")
     private String password;
@@ -45,17 +42,17 @@ public class UserSecurityInfo {
     /*@Column(name = "registered_at",table = "users_info")
     private Timestamp dateTimeOfRegistry;*/
 
-    public UserSecurityInfo() {
+    public UserInfo() {
     }
 
-    public UserSecurityInfo(String username, String password, boolean enabled, String roles) {
+    public UserInfo(String username, String password, boolean enabled, String roles) {
         this.username = username;
         this.password = password;
         this.enabled = enabled;
         this.roles = roles;
     }
 
-    public UserSecurityInfo(String username, String password, boolean enabled, String roles, Country country, String email) {
+    public UserInfo(String username, String password, boolean enabled, String roles, Country country, String email) {
         this.username = username;
         this.password = password;
         this.enabled = enabled;

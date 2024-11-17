@@ -46,21 +46,46 @@
 <div class="dashboard">
     <h1 class="dashboard_title">Welcome to the Dashboard </h1>
     <div class="dashboard_user">
-        <h2 th:text="${userDetails.username}" class="dashboard_user_name"></h2>
+        <!--<h2 th:text="${userDetails.username}" class="dashboard_user_name"></h2>-->
     </div>
 
     <div>
         <span sec:authorize="hasRole('OWNER')" style="color: blue;">You have owner rights</span>
+        <span sec:authorize="hasRole('ADMIN')" style="color: blue;">You have admin rights</span>
         <br><br>
 
         <button sec:authorize="hasAnyRole('OWNER','ADMIN')" type="button"
-                th:onclick="|window.location.href='/allUsers'|">Show All</button>
-
-        <button sec:authorize="hasAnyRole('OWNER','ADMIN')" type="button"
-                th:onclick="|window.location.href='/allUsers'|">Find</button>
-
+                th:onclick="|window.location.href='/allUsers'|">Show All
+        </button>
         <button sec:authorize="hasRole('OWNER')" type="button"
-                th:onclick="|window.location.href='/allUsers'|">Show banned</button>
+                th:onclick="|window.location.href='/allUsers'|">Show banned
+        </button>
+        <br><br>
+
+        <form th:action="@{/searchUser}" method="POST">
+            <label>
+                <input sec:authorize="hasAnyRole('OWNER','ADMIN')"
+                       type="text" name="value" placeholder="Enter value">
+            </label>
+            <button type="submit" th:text="#{form.submit}">Search</button>
+        </form>
+        <div>
+            <table>
+                <thead>
+                <tr>
+                    <th>Name</th>
+                    <th>Email</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:each="s : ${searchResults}">
+                    <td th:text="${s.username}"></td>
+                    <td th:text="${s.email}"></td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+
     </div>
 
     <br><br>
