@@ -81,11 +81,12 @@
                 <tr th:each="s : ${searchResults}">
                     <td th:text="${s.username}"></td>
                     <td th:text="${s.email}"></td>
+                    <!--<td><a th:href="@{/edit/{id}(id=${user.id})}">Edit</a></td>-->
+                    <td sec:authorize="hasRole('OWNER')"><a th:href="@{/delete/{username}(username=${s.username})}">Delete</a></td>
                 </tr>
                 </tbody>
             </table>
         </div>
-
     </div>
 
     <br><br>

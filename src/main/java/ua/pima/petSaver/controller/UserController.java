@@ -66,18 +66,19 @@ public class UserController {
         return "allUsersView";
     }
 
-   /* @GetMapping("/searchUser")
-    public String searchUser(Model model,String value) {
-        model.addAttribute("userSearch", new UserSearch(value));
-
-        return "homeView";
-    }*/
-
     @PostMapping("/searchUser")
     public String searchUser(@ModelAttribute UserSearch userSearch, Model model) {
         List<UserInfo> searchResults =
                 userService.search(userSearch);
         model.addAttribute("searchResults", searchResults);
+        return "homeView";
+    }
+
+    @GetMapping("/delete/{username}")
+    public String deleteUser(@PathVariable("username")String username,Model model){
+        UserInfo userInfo = userService.findByUsername(username)
+                .orElseThrow(() -> new IllegalArgumentException("Invalid username:" + username));
+        userService.deleteUser(userInfo);
         return "homeView";
     }
 

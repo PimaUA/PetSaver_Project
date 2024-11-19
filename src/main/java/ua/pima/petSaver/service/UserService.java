@@ -1,6 +1,5 @@
 package ua.pima.petSaver.service;
 
-import org.springframework.data.domain.Example;
 import ua.pima.petSaver.dto.SignUpUserDto;
 import ua.pima.petSaver.dto.UserSearch;
 import ua.pima.petSaver.entity.user.UserInfo;
@@ -19,6 +18,8 @@ public interface UserService {
     List<UserInfo> getAllUsers();
 
     List<UserInfo> search(UserSearch userSearch);
+
+    void deleteUser(UserInfo userInfo);
 
     //List<UserInfo> getAllUsersForSearch(Example<UserInfo> example);
 

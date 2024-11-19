@@ -48,6 +48,11 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    public void deleteUser(UserInfo userInfo) {
+        userInfoRepository.delete(userInfo);
+    }
+
+    @Override
     public List<UserInfo> getAllUsers() {
         return userInfoRepository.findAll();
     }
@@ -69,6 +74,7 @@ public class UserServiceImpl implements UserService {
                         .withStringMatcher(ExampleMatcher.StringMatcher.CONTAINING));
         return userInfoRepository.findAll(example);
     }
+
     /*private UserSecurityInfo convertToUserSecurityInfo(SignUpUserDto signUpUserDto) {
         return modelMapper.map(signUpUserDto, UserSecurityInfo.class);
     }*/
