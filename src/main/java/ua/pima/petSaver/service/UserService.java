@@ -21,7 +21,5 @@ public interface UserService {
 
     void deleteUser(UserInfo userInfo);
 
-    //List<UserInfo> getAllUsersForSearch(Example<UserInfo> example);
-
-    //void saveUserSecurityInfo(SignUpUserDto signUpUserDto);
+    void toggleUserStatus(List<String> enableUsernames, List<String> disableUsernames);
 }

@@ -14,10 +14,10 @@ public class CustomUserDetails implements UserDetails {
     private String password;
     private Collection<? extends GrantedAuthority> authorities;
 
-    public CustomUserDetails(UserInfo userSecurityInfo) {
-        this.username = userSecurityInfo.getUsername();
-        this.password = userSecurityInfo.getPassword();
-        this.authorities = Stream.of(userSecurityInfo.getRoles().split(","))
+    public CustomUserDetails(UserInfo userInfo) {
+        this.username = userInfo.getUsername();
+        this.password = userInfo.getPassword();
+        this.authorities = Stream.of(userInfo.getRoles().split(","))
                 .map(SimpleGrantedAuthority::new).collect(Collectors.toList());
     }
 

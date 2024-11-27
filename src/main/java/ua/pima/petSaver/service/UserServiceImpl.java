@@ -1,9 +1,9 @@
 package ua.pima.petSaver.service;
 
-import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Example;
 import org.springframework.data.domain.ExampleMatcher;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
@@ -14,13 +14,14 @@ import ua.pima.petSaver.repository.UserInfoRepository;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 @Service
 public class UserServiceImpl implements UserService {
     @Autowired
     UserInfoRepository userInfoRepository;
-    @Autowired
-    ModelMapper modelMapper;
     @Autowired
     BCryptPasswordEncoder bCryptPasswordEncoder;
 
@@ -39,12 +40,7 @@ public class UserServiceImpl implements UserService {
         UserInfo userInfo = new UserInfo(signUpUserDto.getUsername()
                 , bCryptPasswordEncoder.encode(signUpUserDto.getPassword()), true, "ROLE_USER",
         signUpUserDto.getCountry(),signUpUserDto.getEmail());
-
         userInfoRepository.save(userInfo);
-
-        /*signUpUserDto.setPassword(bCryptPasswordEncoder.encode(signUpUserDto.getPassword()));
-        UserSecurityInfo userSecurityInfo = convertToUserSecurityInfo(signUpUserDto);
-        userSecurityInfoRepository.save(userSecurityInfo);*/
     }
 
     @Override
@@ -57,11 +53,7 @@ public class UserServiceImpl implements UserService {
         return userInfoRepository.findAll();
     }
 
-    /*@Override
-    public List<UserInfo> getAllUsersForSearch(Example<UserInfo> example) {
-        return userInfoRepository.findAll(example);
-    }*/
-
+    @Override
     public List<UserInfo> search(UserSearch userSearch) {
         UserInfo probe = new UserInfo();
         if (StringUtils.hasText(userSearch.value())) {
@@ -75,7 +67,28 @@ public class UserServiceImpl implements UserService {
         return userInfoRepository.findAll(example);
     }
 
-    /*private UserSecurityInfo convertToUserSecurityInfo(SignUpUserDto signUpUserDto) {
-        return modelMapper.map(signUpUserDto, UserSecurityInfo.class);
-    }*/
+    @Override
+    public void toggleUserStatus(List<String> enableUsernames, List<String> disableUsernames) {
+        // Fetch all users whose usernames are in the provided lists
+        List<UserInfo> users = userInfoRepository.findByUsernameIn(
+                Stream.concat(enableUsernames.stream(), disableUsernames.stream()).distinct().toList()
+        );
+        // Validate that all provided usernames exist
+        Set<String> foundUsernames = users.stream()
+                .map(UserInfo::getUsername)
+                .collect(Collectors.toSet());
+        if (!foundUsernames.containsAll(enableUsernames) || !foundUsernames.containsAll(disableUsernames)) {
+            throw new UsernameNotFoundException("One or more usernames not found");
+        }
+        // Update the enable status for each user
+        for (UserInfo user : users) {
+            if (enableUsernames.contains(user.getUsername())) {
+                user.setEnabled(true);
+            } else if (disableUsernames.contains(user.getUsername())) {
+                user.setEnabled(false);
+            }
+        }
+        // Save the updated users
+        userInfoRepository.saveAll(users);
+    }
 }

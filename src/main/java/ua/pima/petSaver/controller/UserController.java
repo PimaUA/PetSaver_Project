@@ -24,10 +24,11 @@ public class UserController {
     @Autowired
     CustomUserDetailsService customUserDetailsService;
 
+    //method implementation is in progress
     @GetMapping("/home")
     public String showHomePage(Model model, Principal principal) {
-        UserDetails userDetails = customUserDetailsService.loadUserByUsername(principal.getName());
-        model.addAttribute("userDetails", userDetails);
+        /*UserDetails userDetails = customUserDetailsService.loadUserByUsername(principal.getName());
+        model.addAttribute("userDetails", userDetails);*/
         return "homeView";
     }
 
@@ -75,10 +76,24 @@ public class UserController {
     }
 
     @GetMapping("/delete/{username}")
-    public String deleteUser(@PathVariable("username")String username,Model model){
+    public String deleteUser(@PathVariable("username") String username, Model model) {
         UserInfo userInfo = userService.findByUsername(username)
                 .orElseThrow(() -> new IllegalArgumentException("Invalid username:" + username));
         userService.deleteUser(userInfo);
+        return "homeView";
+    }
+
+    @PostMapping("/disableOrEnable")
+    public String toggleUserStatus(@RequestParam(value = "usernamesEnabled", required = false) List<String> enabledUsernames,
+                                   @RequestParam(value = "usernamesDisabled", required = false) List<String> allUsernames
+    ) {
+        if (enabledUsernames != null && allUsernames != null) {
+            allUsernames.removeAll(enabledUsernames);  // Remove enabled users from the disabled list
+        }
+
+        if (enabledUsernames != null) {
+            userService.toggleUserStatus(enabledUsernames, allUsernames);
+        }
         return "homeView";
     }
 

@@ -10,8 +10,6 @@ import org.hibernate.annotations.OnDeleteAction;
 @Getter
 @Entity
 @Table(name = "users")
-//@SecondaryTable(name = "authorities", pkJoinColumns = @PrimaryKeyJoinColumn(name = "username"))
-
 @SecondaryTables({
         @SecondaryTable(
                 name = "authorities",
@@ -25,13 +23,12 @@ import org.hibernate.annotations.OnDeleteAction;
 public class UserInfo {
     @Id
     @Column(name = "username")
-    //??
     @OnDelete(action = OnDeleteAction.CASCADE)
     private String username;
     @Column(name = "password")
     private String password;
     @Column(name = "enabled")
-    private boolean enabled;
+    private boolean isEnabled;
     @Column(name = "authority", table = "authorities")
     private String roles;
 
@@ -45,17 +42,17 @@ public class UserInfo {
     public UserInfo() {
     }
 
-    public UserInfo(String username, String password, boolean enabled, String roles) {
+    public UserInfo(String username, String password, boolean isEnabled, String roles) {
         this.username = username;
         this.password = password;
-        this.enabled = enabled;
+        this.isEnabled = isEnabled;
         this.roles = roles;
     }
 
-    public UserInfo(String username, String password, boolean enabled, String roles, Country country, String email) {
+    public UserInfo(String username, String password, boolean isEnabled, String roles, Country country, String email) {
         this.username = username;
         this.password = password;
-        this.enabled = enabled;
+        this.isEnabled = isEnabled;
         this.roles = roles;
         this.country = country;
         this.email = email;

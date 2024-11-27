@@ -7,7 +7,6 @@ import lombok.Setter;
 import ua.pima.petSaver.entity.user.Country;
 import ua.pima.petSaver.validation.PasswordMatches;
 
-import java.sql.Timestamp;
 
 @Getter
 @Setter
@@ -15,7 +14,7 @@ import java.sql.Timestamp;
 public class SignUpUserDto {
     @Size(min = 3, message = "name must be more than 2 symbols")
     private String username;
-    @Email(regexp = "^[A-Za-z0-9]+(?:\\.[A-Za-z0-9])*@(?!Mail\\.ru|Yandex\\.net)[A-Za-z0-9]+(?:\\.[A-Za-z0-9])*\\.\\w+$")
+    @Email(regexp = "^[A-Za-z0-9]+(?:\\.[A-Za-z0-9])*@(?!Mail\\.com|Mail2\\.net)[A-Za-z0-9]+(?:\\.[A-Za-z0-9])*\\.\\w+$")
     private String email;
     @Size(min = 3, message = "minimum 3 characters")
     private String password;

@@ -62,31 +62,47 @@
         </button>
         <br><br>
 
+        <!--add if clause-->
         <form th:action="@{/searchUser}" method="POST">
             <label>
                 <input sec:authorize="hasAnyRole('OWNER','ADMIN')"
                        type="text" name="value" placeholder="Enter value">
             </label>
             <button type="submit" th:text="#{form.submit}">Search</button>
+            <br><br>
         </form>
+
         <div>
+            <form th:action="@{/disableOrEnable}" method="post">
             <table>
                 <thead>
                 <tr>
                     <th>Name</th>
                     <th>Email</th>
+                    <th>Country</th>
+                    <th>Role</th>
+                    <th>Enabled</th>
                 </tr>
                 </thead>
                 <tbody>
                 <tr th:each="s : ${searchResults}">
                     <td th:text="${s.username}"></td>
                     <td th:text="${s.email}"></td>
-                    <!--<td><a th:href="@{/edit/{id}(id=${user.id})}">Edit</a></td>-->
+                    <td th:text="${s.country}"></td>
+                    <td th:text="${s.roles}"></td>
+                    <td sec:authorize="hasAnyRole('OWNER','ADMIN')">
+                            <input type="hidden" name="usernamesDisabled" th:value="${s.username}"/>
+                            <input type="checkbox" name="usernamesEnabled" th:value="${s.username}"
+                                   th:checked="${s.isEnabled}" />
+                    </td>
                     <td sec:authorize="hasRole('OWNER')"><a th:href="@{/delete/{username}(username=${s.username})}">Delete</a></td>
                 </tr>
                 </tbody>
             </table>
+               <button type="submit">Enable/Disable Selected Users</button>
+            </form>
         </div>
+
     </div>
 
     <br><br>
@@ -96,5 +112,4 @@
 
 </div>
 </body>
-
 </html>

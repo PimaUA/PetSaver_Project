@@ -6,6 +6,7 @@ import jakarta.persistence.Converter;
 
 import java.util.stream.Stream;
 
+//edit converter autoApply
 @Converter(autoApply = true)
 public class CountryConverter implements AttributeConverter<Country, String> {
 

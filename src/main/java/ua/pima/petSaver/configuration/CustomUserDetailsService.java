@@ -8,40 +8,18 @@ import org.springframework.stereotype.Service;
 import ua.pima.petSaver.entity.user.UserInfo;
 import ua.pima.petSaver.repository.UserInfoRepository;
 
-import java.util.Optional;
-
 @Service
 public class CustomUserDetailsService implements UserDetailsService {
-
     @Autowired
-    private UserInfoRepository userSecurityInfoRepository;
+    private UserInfoRepository userInfoRepository;
 
-      @Override
+    @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-      Optional<UserInfo> optionalUserSecurityInfo=userSecurityInfoRepository.findByUsername(username);
-      return optionalUserSecurityInfo.map(CustomUserDetails::new)
-              .orElseThrow(()->new UsernameNotFoundException("Invalid username"));
+        UserInfo userInfo = userInfoRepository.findByUsername(username)
+                .orElseThrow(() -> new UsernameNotFoundException("Invalid username"));
+        if (!userInfo.isEnabled()) {
+            throw new UsernameNotFoundException("User is not enabled");
+        }
+        return new CustomUserDetails(userInfo);
     }
-
-   /* @Override
-    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        UserSecurityInfo userSecurityInfo=userSecurityInfoRepository.findByUsername(username);
-        if(userSecurityInfo==null){
-            throw new UsernameNotFoundException("Username or Password not found");
-        }
-        return new CustomUserDetails(userSecurityInfo.getUsername(),userSecurityInfo.getPassword()
-                ,getAuthorities(userSecurityInfo.getRoles()));
-    }*/
-
-    /*public Collection<? extends GrantedAuthority> authorities(){
-        return List.of(new SimpleGrantedAuthority("ROLE_USER"));
-    }*/
-
-  /*  private static List<GrantedAuthority> getAuthorities (List<String> roles) {
-        List<GrantedAuthority> authorities = new ArrayList<>();
-        for (String role : roles) {
-            authorities.add(new SimpleGrantedAuthority(role));
-        }
-        return authorities;
-    }*/
 }
